@@ -12,10 +12,9 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "pc-status"
 
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def home():
-    return render_template(
-        "home.html")
+    return render_template("home.html")
 
 
 if __name__ == "__main__":
