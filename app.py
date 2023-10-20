@@ -15,8 +15,7 @@ app.config["SECRET_KEY"] = "pc-status"
 @app.route("/")
 def home():
     return render_template(
-        "home.html",
-    )
+        "home.html")
 
 
 if __name__ == "__main__":
