@@ -32,5 +32,5 @@ pip install -r requirements.txt
 
 5. Run the main file (Notice that it will run on 127.0.0.1:5000 at it currently in development).
 ```sh
-python main.py
+python app.py
 ```
