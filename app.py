@@ -1,12 +1,28 @@
+from typing import Union, List, Dict
 from flask import Flask, render_template
 from googleapiclient.discovery import build
+
+import pandas as pd
 import google.oauth2.service_account
-from typing import Union, List, Dict
 
 # Consts
 SCOPES = ["https://www.googleapis.com/auth/forms.responses.readonly"]
 CLIENT_SECRET_PATH = "resources/client_secret.json"
-EXCEL_DB_PATH = "db/test.py"
+EXCEL_FILE_PATH = "db/test.xlsx"
+WAITING_TEXT = "מחשבים שלא טופלו"
+NOT_TAKEN_TEXT = "מחשבים שטופלו ולא נלקחו"
+TAKEN_TEXT = "מחשבים שטופלו ונלקחו"
+COLUMNS_BANK = ['Unit',
+                'Email',
+                'Designated action',
+                'Date',
+                'Ofiice segment',
+                'Personal number / ID',
+                'Serial number (Computer name)',
+                'Network',
+                'Notes',
+                'Phone number',
+                'Full name']
 
 # The form ID can be found in the edit mode of any form that was 
 # created by the user which made the Google Cloud Console project.
@@ -21,7 +37,48 @@ app.config["SECRET_KEY"] = "pc-status"
 
 
 def save_responses_to_excel(parsed_reponses: List[Dict[str, str]]):
-    pass
+    '''
+    This function gets the parsed responese and add every each and one of them that
+    to the excel file. Notice that if a computer's serial number is already in the excel,
+    it won't be added.
+
+    @params: parsed_reponses -> a parsed responses extracted from the json responses.
+    Returns: None.
+    '''
+    # Load the existing Excel file into a DataFrame
+    df = pd.read_excel(EXCEL_FILE_PATH, engine='openpyxl', dtype=str)
+
+    for response in parsed_reponses:
+        # Check if the serial number is in the serial numbers column to prevent duplicates
+        serial_number = response['Serial number (Computer name)'].upper()
+        is_serial_in_serials = serial_number in df['מספר סריאלי'].values
+        if is_serial_in_serials:
+            continue
+
+        # Create a new row as a dictionary with keys matching the column headers
+        new_row = {
+            'שם מלא': response['Full name'],
+            'תאריך כניסת מחשב': response['Date'],
+            'הפעולה הנדרשת': response['Designated action'],
+            'פרמוט לרשת': response['Network'],
+            'מספר סריאלי': serial_number,
+            'סגמנט במשרד': response['Ofiice segment'],
+            'יחידה': response['Unit'],
+            'מספר אישי/ת.ז': response['Personal number / ID'],
+            'מייל אזרחי': response['Email'],
+            'טלפון אזרחי': response['Phone number'],
+            'הערות': response['Notes'],
+            'סטטוס': WAITING_TEXT
+        }
+
+        # Convert the values in the new row to strings to ensure they are treated as text
+        new_row = {key: str(value) for key, value in new_row.items()}
+
+        # Append the new row to the DataFrame
+        df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+
+    # Write the updated DataFrame back to the Excel file
+    df.to_excel(EXCEL_FILE_PATH, index=False, engine='openpyxl')
 
 
 def parse_json_response(json_responses: JsonType) -> List[Dict[str, str]]:
@@ -32,15 +89,15 @@ def parse_json_response(json_responses: JsonType) -> List[Dict[str, str]]:
     Please notice that the json reponse contains answers in the following order:
         1. Unit
         2. Email
-        3. Date
-        4. Designated action
+        3. Designated action
+        4. Date
         5. Ofiice segment
         6. Personal number/ ID
         7. Serial number (Computer name)
         8. Network
         9. Notes
-        10. Full name
-        11. Phone number
+        10. Phone number
+        11. Full name
     
     This is inconvenient because the form is not ordered in that way, but the json reponse is.
 
@@ -65,7 +122,7 @@ def parse_json_response(json_responses: JsonType) -> List[Dict[str, str]]:
             # Create a dict to store all the answers by checking
             #   if the question id of the answer is in the questions_ids dict.
             if question_id in questions_ids.values():
-                single_response[f"Answer {index + 1}"] = text_value
+                single_response[COLUMNS_BANK[index]] = text_value
 
         # Append single response to a list
         parsed_responses.append(single_response)
