@@ -1,13 +1,208 @@
-<!doctype html>
-<html lang="he">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Bootstrap demo</title>
-    </head>
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
 
-    <body>
-        <h1>Hello, world! Here are the answers:</h1>
-        {{ responses }}
-    </body>
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>סטטוס מחשבים מעבדת לוט"ם</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="static/css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+    <!-- As a link -->
+    <nav class="navbar navbar-light bg-primary">
+        <a class="navbar-brand text-light" href="#">מעבדת לוט"ם</a>
+    </nav>
+    <div class="container-fluid mt-3">
+        <div class="row-fluid">
+            <h1 class="text-right">סטטוס מחשבים</h1>
+        </div>
+    </div>
+
+    <div class="container-fluid mt-3">
+        <div class="row">
+            <div class="col-lg-4">
+                <h3 class="text-right card border-left-danger shadow pt-2 pb-1">לא טופלו</h3>
+                <table class="table table-striped text-right table-responsive">
+                    <thead class="thead-primary">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">שם מלא</th>
+                            <th scope="col">תאריך כניסת מחשב</th>
+                            <th scope="col">הפעולה הנדרשת</th>
+                            <th scope="col">פרמוט לרשת</th>
+                            <th scope="col">מספר סריאלי</th>
+                            <th scope="col">סגמנט במשרד</th>
+                            <th scope="col">יחידה</th>
+                            <th scope="col">מספר אישי/ת.ז</th>
+                            <th scope="col">מייל אזרחי</th>
+                            <th scope="col">טלפון אזרחי</th>
+                            <th scope="col">הערות</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>נאור אור ציון</th>
+                            <td>10.10.2023</th>
+                            <td>הכנסה לדומיין</th>
+                            <td>4</th>
+                            <td>21UA1212</th>
+                            <td>סגמנט במשרד</th>
+                            <td>יחידה</th>
+                            <td>מספר אישי/ת.ז</th>
+                            <td>מייל אזרחי</th>
+                            <td>טלפון אזרחי</th>
+                            <td>הערות</th>
+                        </tr>
+                        <tr>
+                            <td>2</th>
+                            <td>שם מלא</th>
+                            <td>תאריך כניסת מחשב</th>
+                            <td>הפעולה הנדרשת</th>
+                            <td>פרמוט לרשת</th>
+                            <td>מספר סריאלי</th>
+                            <td>סגמנט במשרד</th>
+                            <td>יחידה</th>
+                            <td>מספר אישי/ת.ז</th>
+                            <td>מייל אזרחי</th>
+                            <td>טלפון אזרחי</th>
+                            <td>הערות</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-lg-4">
+                <h3 class="text-right card border-left-warning shadow pt-2 pb-1">טופלו ולא נלקחו</h3>
+                <table class="table table-striped text-right table-responsive">
+                    <thead class="thead-primary">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">שם מלא</th>
+                            <th scope="col">תאריך כניסת מחשב</th>
+                            <th scope="col">הפעולה הנדרשת</th>
+                            <th scope="col">פרמוט לרשת</th>
+                            <th scope="col">מספר סריאלי</th>
+                            <th scope="col">סגמנט במשרד</th>
+                            <th scope="col">יחידה</th>
+                            <th scope="col">מספר אישי/ת.ז</th>
+                            <th scope="col">מייל אזרחי</th>
+                            <th scope="col">טלפון אזרחי</th>
+                            <th scope="col">הערות</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>נאור אור ציון</th>
+                            <td>תאריך כניסת מחשב</th>
+                            <td>הפעולה הנדרשת</th>
+                            <td>פרמוט לרשת</th>
+                            <td>מספר סריאלי</th>
+                            <td>סגמנט במשרד</th>
+                            <td>יחידה</th>
+                            <td>מספר אישי/ת.ז</th>
+                            <td>מייל אזרחי</th>
+                            <td>טלפון אזרחי</th>
+                            <td>הערות</th>
+                        </tr>
+                        <tr>
+                            <td>2</th>
+                            <td>שם מלא</th>
+                            <td>תאריך כניסת מחשב</th>
+                            <td>הפעולה הנדרשת</th>
+                            <td>פרמוט לרשת</th>
+                            <td>מספר סריאלי</th>
+                            <td>סגמנט במשרד</th>
+                            <td>יחידה</th>
+                            <td>מספר אישי/ת.ז</th>
+                            <td>מייל אזרחי</th>
+                            <td>טלפון אזרחי</th>
+                            <td>הערות</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-lg-4">
+                <h3 class="text-right card border-left-success shadow pt-2 pb-1">טופלו ונלקחו</h3>
+                <table class="table table-striped text-right table-responsive">
+                    <thead class="thead-primary">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">שם מלא</th>
+                            <th scope="col">תאריך כניסת מחשב</th>
+                            <th scope="col">הפעולה הנדרשת</th>
+                            <th scope="col">פרמוט לרשת</th>
+                            <th scope="col">מספר סריאלי</th>
+                            <th scope="col">סגמנט במשרד</th>
+                            <th scope="col">יחידה</th>
+                            <th scope="col">מספר אישי/ת.ז</th>
+                            <th scope="col">מייל אזרחי</th>
+                            <th scope="col">טלפון אזרחי</th>
+                            <th scope="col">הערות</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>נאור אור ציון</th>
+                            <td>תאריך כניסת מחשב</th>
+                            <td>הפעולה הנדרשת</th>
+                            <td>פרמוט לרשת</th>
+                            <td>מספר סריאלי</th>
+                            <td>סגמנט במשרד</th>
+                            <td>יחידה</th>
+                            <td>מספר אישי/ת.ז</th>
+                            <td>מייל אזרחי</th>
+                            <td>טלפון אזרחי</th>
+                            <td>הערות</th>
+                        </tr>
+                        <tr>
+                            <td>2</th>
+                            <td>שם מלא</th>
+                            <td>תאריך כניסת מחשב</th>
+                            <td>הפעולה הנדרשת</th>
+                            <td>פרמוט לרשת</th>
+                            <td>מספר סריאלי</th>
+                            <td>סגמנט במשרד</th>
+                            <td>יחידה</th>
+                            <td>מספר אישי/ת.ז</th>
+                            <td>מייל אזרחי</th>
+                            <td>טלפון אזרחי</th>
+                            <td>הערות</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap core JavaScript-->
+    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="static/js/sb-admin-2.min.js"></script>
+
+</body>
+
 </html>
