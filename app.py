@@ -174,7 +174,7 @@ def home_page():
     parsed_reponses = parse_json_response(json_responses=json_responses)
     save_responses_to_excel(parsed_reponses=parsed_reponses)
 
-    return render_template("home.html", responses=parsed_reponses)
+    return render_template("blank.html", responses=parsed_reponses)
 
 
 if __name__ == "__main__":
