@@ -6,9 +6,10 @@ from typing import Union, List, Dict
 # Consts
 SCOPES = ["https://www.googleapis.com/auth/forms.responses.readonly"]
 CLIENT_SECRET_PATH = "resources/client_secret.json"
+EXCEL_DB_PATH = "db/test.py"
 
 # The form ID can be found in the edit mode of any form that was 
-# created under the user which made the Google Cloud Console project.
+# created by the user which made the Google Cloud Console project.
 FORM_ID = "1spTaWVM6t2BPGFGhmrfFszV2HZdgjzrSHzbPROny0wg"
 
 # Unique Typing Types
@@ -109,6 +110,7 @@ def home_page():
     '''
     json_responses = get_json_response()
     parsed_reponses = parse_json_response(json_responses=json_responses)
+    save_responses_to_excel(parsed_reponses=parsed_reponses)
 
     return render_template("home.html", responses=parsed_reponses)
 
