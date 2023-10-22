@@ -19,6 +19,10 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "pc-status"
 
 
+def save_responses_to_excel(parsed_reponses: List[Dict[str, str]]):
+    pass
+
+
 def parse_json_response(json_responses: JsonType) -> List[Dict[str, str]]:
     '''
     This function will get a response in json format, extract the data out of
