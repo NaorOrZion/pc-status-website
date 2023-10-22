@@ -6,9 +6,6 @@ from typing import Union, List, Dict
 # Consts
 SCOPES = ["https://www.googleapis.com/auth/forms.responses.readonly"]
 CLIENT_SECRET_PATH = "resources/client_secret.json"
-QUESTIONS_IDS = {"Question 1": "51d60a34",
-                 "Question 2": "115635e7",
-                 "Question 3": "5cd564b4"}
 
 # The form ID can be found in the edit mode of any form that was 
 # created under the user which made the Google Cloud Console project.
@@ -27,6 +24,20 @@ def parse_json_response(json_responses: JsonType) -> List[Dict[str, str]]:
     This function will get a response in json format, extract the data out of
     it to a list of dictionaries which every dictionary in the list is a single
     form response.
+    Please notice that the json reponse contains answers in the following order:
+        1. Unit
+        2. Email
+        3. Date
+        4. Designated action
+        5. Ofiice segment
+        6. Personal number/ ID
+        7. Serial number (Computer name)
+        8. Network
+        9. Notes
+        10. Full name
+        11. Phone number
+    
+    This is inconvenient because the form is not ordered in that way, but the json reponse is.
 
     @params: json_responses     -> a JsonType form response the function will parse.
     Returns: parsed_responses   -> a parsed responses extracted from the json responses.
@@ -38,23 +49,23 @@ def parse_json_response(json_responses: JsonType) -> List[Dict[str, str]]:
         answers = response["answers"]
         questions_ids = {f"Question {index + 1}": id for index, id in enumerate(answers)}
 
+        # Iterate over the user answers
         for index, answer in enumerate(answers):
-            question_id = answer["questionId"]
-            text_value = answer["textAnswers"]["answers"][0]["value"]
+            # Retrive the question id of the asnwer
+            question_id = answers[answer]["questionId"]
 
-            # Replace the hard coded question ids with iteration
-            # match question_id:
-            #     case questions_ids[f"Question {index + 1}"]:
-            #         single_response["Answer 1"] = text_value
+            # Retrive the user answer value
+            text_value = answers[answer]["textAnswers"]["answers"][0]["value"]
 
-            #     case questions_ids["Question 2"]:
-            #         single_response["Answer 2"] = text_value
+            # Create a dict to store all the answers by checking
+            #   if the question id of the answer is in the questions_ids dict.
+            if question_id in questions_ids.values():
+                single_response[f"Answer {index + 1}"] = text_value
 
-            #     case questions_ids["Question 3"]:
-            #         single_response["Answer 3"] = text_value
+        # Append single response to a list
+        parsed_responses.append(single_response)
 
-            #     case _:
-            #         None
+    return parsed_responses
 
 
 
@@ -93,9 +104,9 @@ def home_page():
     Returns: None.
     '''
     json_responses = get_json_response()
-    dict_reponses = parse_json_response(json_responses=json_responses)
+    parsed_reponses = parse_json_response(json_responses=json_responses)
 
-    return render_template("home.html", responses=json_responses)
+    return render_template("home.html", responses=parsed_reponses)
 
 
 if __name__ == "__main__":
