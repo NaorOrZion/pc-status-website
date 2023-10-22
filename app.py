@@ -14,15 +14,15 @@ NOT_TAKEN_TEXT = "מחשבים שטופלו ולא נלקחו"
 TAKEN_TEXT = "מחשבים שטופלו ונלקחו"
 COLUMNS_BANK = ['Unit',
                 'Email',
-                'Designated action',
                 'Date',
+                'Designated action',
                 'Ofiice segment',
                 'Personal number / ID',
                 'Serial number (Computer name)',
                 'Network',
                 'Notes',
-                'Phone number',
-                'Full name']
+                'Full name',
+                'Phone number']
 
 # The form ID can be found in the edit mode of any form that was 
 # created by the user which made the Google Cloud Console project.
@@ -36,7 +36,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "pc-status"
 
 
-def save_responses_to_excel(parsed_reponses: List[Dict[str, str]]):
+def save_responses_to_excel(parsed_reponses: List[Dict[str, str]]) -> None:
     '''
     This function gets the parsed responese and add every each and one of them that
     to the excel file. Notice that if a computer's serial number is already in the excel,
@@ -46,7 +46,8 @@ def save_responses_to_excel(parsed_reponses: List[Dict[str, str]]):
     Returns: None.
     '''
     # Load the existing Excel file into a DataFrame
-    df = pd.read_excel(EXCEL_FILE_PATH, engine='openpyxl', dtype=str)
+    df = pd.read_excel(EXCEL_FILE_PATH, engine='openpyxl')
+    
 
     for response in parsed_reponses:
         # Check if the serial number is in the serial numbers column to prevent duplicates
@@ -77,8 +78,12 @@ def save_responses_to_excel(parsed_reponses: List[Dict[str, str]]):
         # Append the new row to the DataFrame
         df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
 
-    # Write the updated DataFrame back to the Excel file
-    df.to_excel(EXCEL_FILE_PATH, index=False, engine='openpyxl')
+        try:
+            # Write the updated DataFrame back to the Excel file
+            df.to_excel(EXCEL_FILE_PATH, index=False, engine='openpyxl')
+        except PermissionError as pe:
+            print(f"Error: Please close the excel file located in - {EXCEL_FILE_PATH}")
+            return
 
 
 def parse_json_response(json_responses: JsonType) -> List[Dict[str, str]]:
@@ -89,15 +94,15 @@ def parse_json_response(json_responses: JsonType) -> List[Dict[str, str]]:
     Please notice that the json reponse contains answers in the following order:
         1. Unit
         2. Email
-        3. Designated action
-        4. Date
+        3. Date
+        4. Designated action
         5. Ofiice segment
         6. Personal number/ ID
         7. Serial number (Computer name)
         8. Network
         9. Notes
-        10. Phone number
-        11. Full name
+        10. Full name
+        11. Phone number
     
     This is inconvenient because the form is not ordered in that way, but the json reponse is.
 
