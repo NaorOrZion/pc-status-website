@@ -14,15 +14,15 @@ NOT_TAKEN_TEXT = "מחשבים שטופלו ולא נלקחו"
 TAKEN_TEXT = "מחשבים שטופלו ונלקחו"
 COLUMNS_BANK = ['Unit',
                 'Email',
-                'Date',
                 'Designated action',
+                'Date',
                 'Ofiice segment',
                 'Personal number / ID',
                 'Serial number (Computer name)',
                 'Network',
                 'Notes',
-                'Full name',
-                'Phone number']
+                'Phone number',
+                'Full name']
 
 # The form ID can be found in the edit mode of any form that was 
 # created by the user which made the Google Cloud Console project.
@@ -94,15 +94,15 @@ def parse_json_response(json_responses: JsonType) -> List[Dict[str, str]]:
     Please notice that the json reponse contains answers in the following order:
         1. Unit
         2. Email
-        3. Date
-        4. Designated action
+        3. Designated action
+        4. Date
         5. Ofiice segment
         6. Personal number/ ID
         7. Serial number (Computer name)
         8. Network
         9. Notes
-        10. Full name
-        11. Phone number
+        10. Phone number
+        11. Full name
     
     This is inconvenient because the form is not ordered in that way, but the json reponse is.
 
