@@ -19,7 +19,7 @@
 
     <!-- Custom styles for this template-->
     <link href="static/css/sb-admin-2.min.css" rel="stylesheet">
-
+    <style>.modal-header .close {margin-left: 0;}</style>
 </head>
 
 <body id="page-top">
@@ -56,7 +56,7 @@
                     </thead>
                     <tbody>
                         {% for response in waiting_responses %}
-                        <tr>
+                        <tr data-toggle="modal" data-id="{{ loop.index }}" data-serialNum="{{ response['מספר סריאלי'] }}" data-target="#alert-modal-waiting">
                             <th scope="row">{{ loop.index }}</th>
                             <td>{{ response['שם מלא'] }}</th>
                             <td>{{ response['תאריך כניסת מחשב'] }}</th>
@@ -97,7 +97,7 @@
                     <tbody>
                         <tbody>
                             {% for response in not_taken_responses %}
-                            <tr>
+                            <tr data-toggle="modal" data-id="{{ loop.index }}" data-serialNum="{{ response['מספר סריאלי'] }}" data-target="#alert-modal-not-taken">
                                 <th scope="row">{{ loop.index }}</th>
                                 <td>{{ response['שם מלא'] }}</th>
                                 <td>{{ response['תאריך כניסת מחשב'] }}</th>
@@ -138,7 +138,7 @@
                     </thead>
                     <tbody>
                         {% for response in taken_responses %}
-                        <tr>
+                        <tr data-toggle="modal" data-id="{{ loop.index }}" data-serialNum="{{ response['מספר סריאלי'] }}" data-target="#alert-modal-taken">
                             <th scope="row">{{ loop.index }}</th>
                             <td>{{ response['שם מלא'] }}</th>
                             <td>{{ response['תאריך כניסת מחשב'] }}</th>
@@ -159,6 +159,72 @@
         </div>
     </div>
     
+    <div id="alert-modal-waiting" class="modal fade text-right" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="modal-title-waiting" class="modal-title text-right"></h5>
+                    <button type="button" class="close mr-auto" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <button type="button" class="btn btn-warning btn-lg btn-block" data-serial-number="">העברה למחשבים שטופלו ולא נלקחו</button>
+                    </br>
+                    <button type="button" class="btn btn-success btn btn-block" data-serial-number="">העברה למחשבים שטופלו ונלקחו</button>
+                    <button type="button" class="btn btn-danger btn btn-block delete-button" data-serial-number="">מחיקה</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">סגירה</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="alert-modal-not-taken" class="modal fade text-right" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="modal-title-not-taken" class="modal-title text-right"></h5>
+                    <button type="button" class="close mr-auto" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <button type="button" class="btn btn-success btn-lg btn-block" data-serial-number="">העברה למחשבים שטופלו ונלקחו</button>
+                </br>
+                    <button type="button" class="btn btn-secondary btn btn-block" data-serial-number="">העברה למחשבים שלא נלקחו</button>
+                    <button type="button" class="btn btn-danger btn btn-block" data-serial-number="">מחיקה</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">סגירה</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="alert-modal-taken" class="modal fade text-right" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="modal-title-taken" class="modal-title text-right"></h5>
+                    <button type="button" class="close mr-auto" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <button type="button" class="btn btn-danger btn-lg btn-block" data-serial-number="">מחיקה</button>
+                </br>
+                    <button type="button" class="btn btn-warning btn btn-block" data-serial-number="">העברה למחשבים שטופלו ולא נלקחו</button>
+                    <button type="button" class="btn btn-secondary btn btn-block" data-serial-number="">העברה למחשבים שלא טופלו</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">סגירה</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Bootstrap core JavaScript-->
     <script src="static/vendor/jquery/jquery.min.js"></script>
     <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -168,6 +234,9 @@
 
     <!-- Custom scripts for all pages-->
     <script src="static/js/sb-admin-2.min.js"></script>
+    
+    <!-- Custom scripts for all pages-->
+    <script src="static/js/script.js"></script>
 
 </body>
 

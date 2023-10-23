@@ -1,5 +1,5 @@
 from typing import Union, List, Dict, Tuple
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 from googleapiclient.discovery import build
 
 import pandas as pd
@@ -34,6 +34,31 @@ JsonType = List[Dict[Union[str, Dict[str, Dict[str, Union[str, Dict[str, List[Di
 # App Initializer
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "pc-status"
+
+
+def change_row_status(status: str, row):
+    pass
+
+
+def delete_excel_row(serial_number: str) -> None:
+    '''
+    This function deletes a row in the excel by a serial number of a computer.
+
+    @params: serial_number -> a serial number to match one of the values in the column 'מספר סריאלי'.
+    Returns: None.
+    '''
+    # Load the Excel file into a DataFrame
+    df = pd.read_excel(EXCEL_FILE_PATH, engine='openpyxl')
+
+    # Specify the column and the value to identify the row to delete
+    column_to_check = 'מספר סריאלי'
+    value_to_match = serial_number
+
+    # Filter the DataFrame to exclude the row with the specified value
+    df = df[df[column_to_check] != value_to_match]
+
+    # Save the updated DataFrame back to the Excel file
+    df.to_excel('your_excel_file_updated.xlsx', index=False, engine='openpyxl')
 
 
 def arrange_responses_by_status(responses: List[Dict[str, str]]) -> Tuple[List[Dict[str, str]], List[Dict[str, str]], List[Dict[str, str]]]:
@@ -237,6 +262,19 @@ def get_json_response() -> JsonType:
     sorted_responses = sorted(responses, key=lambda x: x.get('timestamp', ''))
 
     return sorted_responses
+
+
+@app.route('/delete-row', methods=['POST'])
+def delete_row():
+    '''
+    This function is responsible to retrieve the post request of the delete button in the main page.
+
+    @params: None.
+    Returns: json.
+    '''
+    serial_number_to_delete = request.form.get('serial_number')
+    delete_excel_row(serial_number=serial_number_to_delete)
+    return jsonify({'message': 'Row deleted successfully'})
 
 
 @app.route("/", methods=["GET"])
