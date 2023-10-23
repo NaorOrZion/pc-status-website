@@ -36,8 +36,8 @@
     <div class="container-fluid mt-3">
         <div class="row">
             <div class="col-lg-4">
-                <h3 class="text-right card border-left-danger shadow pt-2 pb-1">לא טופלו</h3>
-                <table class="table table-striped text-right table-responsive">
+                <h3 class="text-right card border-left-danger shadow pt-2 pb-1 pr-2 mb-2">לא טופלו</h3>
+                <table class="table table-hover text-right table-responsive mh-100" style="height: 500px;">
                     <thead class="thead-primary">
                         <tr>
                             <th scope="col">#</th>
@@ -55,41 +55,29 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for response in waiting_responses %}
                         <tr>
-                            <th scope="row">1</th>
-                            <td>נאור אור ציון</th>
-                            <td>10.10.2023</th>
-                            <td>הכנסה לדומיין</th>
-                            <td>4</th>
-                            <td>21UA1212</th>
-                            <td>סגמנט במשרד</th>
-                            <td>יחידה</th>
-                            <td>מספר אישי/ת.ז</th>
-                            <td>מייל אזרחי</th>
-                            <td>טלפון אזרחי</th>
-                            <td>הערות</th>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>{{ response['שם מלא'] }}</th>
+                            <td>{{ response['תאריך כניסת מחשב'] }}</th>
+                            <td>{{ response['הפעולה הנדרשת'] }}</th>
+                            <td>{{ response['פרמוט לרשת'] }}</th>
+                            <td>{{ response['מספר סריאלי'] }}</th>
+                            <td>{{ response['סגמנט במשרד'] }}</th>
+                            <td>{{ response['יחידה'] }}</th>
+                            <td>{{ response['מספר אישי/ת.ז'] }}</th>
+                            <td>{{ response['מייל אזרחי'] }}</th>
+                            <td>{{ response['טלפון אזרחי'] }}</th>
+                            <td>{{ response['הערות'] }}</th>
                         </tr>
-                        <tr>
-                            <td>2</th>
-                            <td>שם מלא</th>
-                            <td>תאריך כניסת מחשב</th>
-                            <td>הפעולה הנדרשת</th>
-                            <td>פרמוט לרשת</th>
-                            <td>מספר סריאלי</th>
-                            <td>סגמנט במשרד</th>
-                            <td>יחידה</th>
-                            <td>מספר אישי/ת.ז</th>
-                            <td>מייל אזרחי</th>
-                            <td>טלפון אזרחי</th>
-                            <td>הערות</th>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
 
             <div class="col-lg-4">
-                <h3 class="text-right card border-left-warning shadow pt-2 pb-1">טופלו ולא נלקחו</h3>
-                <table class="table table-striped text-right table-responsive">
+                <h3 class="text-right card border-left-warning shadow pt-2 pb-1 pr-2 mb-2">טופלו ולא נלקחו</h3>
+                <table class="table table-hover text-right table-responsive mh-100" style="height: 500px;">
                     <thead class="thead-primary">
                         <tr>
                             <th scope="col">#</th>
@@ -107,41 +95,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>נאור אור ציון</th>
-                            <td>תאריך כניסת מחשב</th>
-                            <td>הפעולה הנדרשת</th>
-                            <td>פרמוט לרשת</th>
-                            <td>מספר סריאלי</th>
-                            <td>סגמנט במשרד</th>
-                            <td>יחידה</th>
-                            <td>מספר אישי/ת.ז</th>
-                            <td>מייל אזרחי</th>
-                            <td>טלפון אזרחי</th>
-                            <td>הערות</th>
-                        </tr>
-                        <tr>
-                            <td>2</th>
-                            <td>שם מלא</th>
-                            <td>תאריך כניסת מחשב</th>
-                            <td>הפעולה הנדרשת</th>
-                            <td>פרמוט לרשת</th>
-                            <td>מספר סריאלי</th>
-                            <td>סגמנט במשרד</th>
-                            <td>יחידה</th>
-                            <td>מספר אישי/ת.ז</th>
-                            <td>מייל אזרחי</th>
-                            <td>טלפון אזרחי</th>
-                            <td>הערות</th>
-                        </tr>
+                        <tbody>
+                            {% for response in not_taken_responses %}
+                            <tr>
+                                <th scope="row">{{ loop.index }}</th>
+                                <td>{{ response['שם מלא'] }}</th>
+                                <td>{{ response['תאריך כניסת מחשב'] }}</th>
+                                <td>{{ response['הפעולה הנדרשת'] }}</th>
+                                <td>{{ response['פרמוט לרשת'] }}</th>
+                                <td>{{ response['מספר סריאלי'] }}</th>
+                                <td>{{ response['סגמנט במשרד'] }}</th>
+                                <td>{{ response['יחידה'] }}</th>
+                                <td>{{ response['מספר אישי/ת.ז'] }}</th>
+                                <td>{{ response['מייל אזרחי'] }}</th>
+                                <td>{{ response['טלפון אזרחי'] }}</th>
+                                <td>{{ response['הערות'] }}</th>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
                     </tbody>
                 </table>
             </div>
 
             <div class="col-lg-4">
-                <h3 class="text-right card border-left-success shadow pt-2 pb-1">טופלו ונלקחו</h3>
-                <table class="table table-striped text-right table-responsive">
+                <h3 class="text-right card border-left-success shadow pt-2 pb-1 pr-2 mb-2">טופלו ונלקחו</h3>
+                <table class="table table-hover text-right table-responsive mh-100" style="height: 500px;">
                     <thead class="thead-primary">
                         <tr>
                             <th scope="col">#</th>
@@ -159,34 +137,22 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for response in taken_responses %}
                         <tr>
-                            <th scope="row">1</th>
-                            <td>נאור אור ציון</th>
-                            <td>תאריך כניסת מחשב</th>
-                            <td>הפעולה הנדרשת</th>
-                            <td>פרמוט לרשת</th>
-                            <td>מספר סריאלי</th>
-                            <td>סגמנט במשרד</th>
-                            <td>יחידה</th>
-                            <td>מספר אישי/ת.ז</th>
-                            <td>מייל אזרחי</th>
-                            <td>טלפון אזרחי</th>
-                            <td>הערות</th>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>{{ response['שם מלא'] }}</th>
+                            <td>{{ response['תאריך כניסת מחשב'] }}</th>
+                            <td>{{ response['הפעולה הנדרשת'] }}</th>
+                            <td>{{ response['פרמוט לרשת'] }}</th>
+                            <td>{{ response['מספר סריאלי'] }}</th>
+                            <td>{{ response['סגמנט במשרד'] }}</th>
+                            <td>{{ response['יחידה'] }}</th>
+                            <td>{{ response['מספר אישי/ת.ז'] }}</th>
+                            <td>{{ response['מייל אזרחי'] }}</th>
+                            <td>{{ response['טלפון אזרחי'] }}</th>
+                            <td>{{ response['הערות'] }}</th>
                         </tr>
-                        <tr>
-                            <td>2</th>
-                            <td>שם מלא</th>
-                            <td>תאריך כניסת מחשב</th>
-                            <td>הפעולה הנדרשת</th>
-                            <td>פרמוט לרשת</th>
-                            <td>מספר סריאלי</th>
-                            <td>סגמנט במשרד</th>
-                            <td>יחידה</th>
-                            <td>מספר אישי/ת.ז</th>
-                            <td>מייל אזרחי</th>
-                            <td>טלפון אזרחי</th>
-                            <td>הערות</th>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>

@@ -1,4 +1,4 @@
-from typing import Union, List, Dict
+from typing import Union, List, Dict, Tuple
 from flask import Flask, render_template
 from googleapiclient.discovery import build
 
@@ -36,6 +36,79 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "pc-status"
 
 
+def arrange_responses_by_status(responses: List[Dict[str, str]]) -> Tuple[List[Dict[str, str]], List[Dict[str, str]], List[Dict[str, str]]]:
+    '''
+    This function gets the responses unordered by status so it will order them by status and designate every response to it's 
+    corresponding list.
+
+    @params: responses -> a list of dictionaries which every dictionary represents a single response with random status.
+    Returns: Tuple of three lists -> every list stores it's responses by it's unique status.   
+    '''
+    waiting_responses = []
+    not_taken_responses = []
+    taken_responses = []
+
+    for response in responses:
+        if response['סטטוס'] == WAITING_TEXT:
+            waiting_responses.append(response)
+        
+        if response['סטטוס'] == NOT_TAKEN_TEXT:
+            not_taken_responses.append(response)
+
+        if response['סטטוס'] == TAKEN_TEXT:
+            taken_responses.append(response)
+
+    return (waiting_responses, not_taken_responses, taken_responses)
+
+
+def get_responses_from_excel() -> List[Dict[str, str]]:
+    '''
+    This function gets the rows of all responses from the excel, transfer them to a list of dictionaries which
+    every dictionary represents a single response with the following data in order:
+        1. שם מלא
+        2. תאריך כניסת מחשב
+        3. הפעולה הנדרשת
+        4. פרמוט לרשת
+        5. מספר סריאלי
+        6. סגמנט במשרד
+        7. יחידה
+        8. מספר אישי/ת.ז
+        9. מייל אזרחי
+        10. טלפון אזרחי
+        11. הערות
+        12. סטטוס
+
+    @params: None.
+    Returns: responses_dicts -> a list of dictionaries which every dictionary represents a single response.
+    '''
+    df = pd.read_excel(EXCEL_FILE_PATH,engine='openpyxl',dtype=object,header=None)
+    responses_list = df.values.tolist()
+    responses_list = responses_list[1:] if len(responses_list) > 0 else ['0','0','0','0','0','0','0','0','0','0','0']
+    responses_dicts = []
+
+    for response in responses_list:
+        # Create a new dictionary with keys matching the columns' value
+        response_dict = {
+            'שם מלא': response[0],
+            'תאריך כניסת מחשב': response[1],
+            'הפעולה הנדרשת': response[2],
+            'פרמוט לרשת': response[3],
+            'מספר סריאלי': response[4],
+            'סגמנט במשרד': response[5],
+            'יחידה': response[6],
+            'מספר אישי/ת.ז': response[7],
+            'מייל אזרחי': response[8],
+            'טלפון אזרחי': response[9],
+            'הערות': response[10],
+            'סטטוס': response[11]
+        }
+
+        responses_dicts.append(response_dict)
+
+    return responses_dicts
+    
+
+
 def save_responses_to_excel(parsed_reponses: List[Dict[str, str]]) -> None:
     '''
     This function gets the parsed responese and add every each and one of them that
@@ -46,7 +119,7 @@ def save_responses_to_excel(parsed_reponses: List[Dict[str, str]]) -> None:
     Returns: None.
     '''
     # Load the existing Excel file into a DataFrame
-    df = pd.read_excel(EXCEL_FILE_PATH, engine='openpyxl')
+    df = pd.read_excel(EXCEL_FILE_PATH, engine='openpyxl', dtype=str)
     
 
     for response in parsed_reponses:
@@ -81,6 +154,7 @@ def save_responses_to_excel(parsed_reponses: List[Dict[str, str]]) -> None:
         try:
             # Write the updated DataFrame back to the Excel file
             df.to_excel(EXCEL_FILE_PATH, index=False, engine='openpyxl')
+
         except PermissionError as pe:
             print(f"Error: Please close the excel file located in - {EXCEL_FILE_PATH}")
             return
@@ -159,7 +233,10 @@ def get_json_response() -> JsonType:
     # Process response data
     responses = response.get("responses", [])
 
-    return responses
+    # Sort responses based on timestamp (assuming 'timestamp' is the key)
+    sorted_responses = sorted(responses, key=lambda x: x.get('timestamp', ''))
+
+    return sorted_responses
 
 
 @app.route("/", methods=["GET"])
@@ -171,10 +248,15 @@ def home_page():
     Returns: None.
     '''
     json_responses = get_json_response()
-    parsed_reponses = parse_json_response(json_responses=json_responses)
-    save_responses_to_excel(parsed_reponses=parsed_reponses)
+    parsed_responses = parse_json_response(json_responses=json_responses)
+    save_responses_to_excel(parsed_reponses=parsed_responses)
+    db_responses = get_responses_from_excel()
+    waiting_responses, not_taken_responses, taken_responses = arrange_responses_by_status(responses=db_responses)
 
-    return render_template("home.html", responses=parsed_reponses)
+    return render_template("home.html", 
+                           waiting_responses=waiting_responses, 
+                           not_taken_responses=not_taken_responses, 
+                           taken_responses=taken_responses)
 
 
 if __name__ == "__main__":
