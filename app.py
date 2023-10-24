@@ -156,22 +156,13 @@ def save_responses_to_excel(parsed_reponses: List[Dict[str, str]]) -> None:
     
 
     for response in parsed_reponses:
-        # Check if the serial number is in the serial numbers column to prevent duplicates
-        serial_number = response['Serial number (Computer name)'].upper()
-        is_serial_in_serials = serial_number in df['מספר סריאלי'].values
-
-        # If the serial number of the computer is already in the excel
-        #  and the status's row of this serial number is not WAITING_TEXT
-        if is_serial_in_serials and response['סטטוס'] == WAITING_TEXT:
-            continue
-
         # Create a new row as a dictionary with keys matching the column headers
         new_row = {
             'שם מלא': response['Full name'],
             'תאריך כניסת מחשב': response['Date'],
             'הפעולה הנדרשת': response['Designated action'],
             'פרמוט לרשת': response['Network'],
-            'מספר סריאלי': serial_number,
+            'מספר סריאלי': response['Serial number (Computer name)'].upper(),
             'סגמנט במשרד': response['Ofiice segment'],
             'יחידה': response['Unit'],
             'מספר אישי/ת.ז': response['Personal number / ID'],
