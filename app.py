@@ -40,29 +40,23 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "pc-status"
 
 
-def change_row_status(status: str, row):
-    pass
-
-
-def delete_excel_row(serial_number: str, response_id: str) -> None:
+def change_row_status(move_to_status: str, response_id: str):
     '''
-    This function deletes a row in the excel by a serial number of a computer.
+    This function edits a status to a designated status in a row from the excel by the response id.
+    It edits the row's status to "move_to_status".
 
-    @params: serial_number -> a serial number to match one of the values in the column 'מספר סריאלי'.
+    @params: move_to_status -> current status of the row,
+             response_id -> a response id to match one of the values in the column 'מזהה תשובה'.
     Returns: None.
     '''
     # Load the Excel file into a DataFrame
     df = pd.read_excel(EXCEL_FILE_PATH, engine='openpyxl')
 
-    # Specify the column and the value to identify the row to delete
-    column_to_check = 'מספר סריאלי'
-    value_to_match = serial_number
-
     # Identify the row index based on the specified column value
     row_index = df.index[df['מזהה תשובה'] == response_id].tolist()[0]
 
     # Edit the cell value using the 'at' accessor to "נמחקו"
-    df.at[row_index, 'סטטוס'] = DELETED_TEXT
+    df.at[row_index, 'סטטוס'] = move_to_status
 
     # Save the updated DataFrame back to the Excel file
     df.to_excel(EXCEL_FILE_PATH, index=False, engine='openpyxl')
@@ -279,20 +273,38 @@ def get_json_response() -> JsonType:
     return sorted_responses
 
 
-@app.route('/delete-row', methods=['POST'])
-def delete_row() -> redirect:
+@app.route('/set-row-status', methods=['POST'])
+def set_row_status() -> redirect:
     '''
     This function is responsible to retrieve the post request of the delete button in the main page.
 
     @params: None.
     Returns: redirect object to main page.
     '''
-    serial_number_to_delete = request.form.get('serial_number')
-    response_id = request.form.get('response_id')
-    delete_excel_row(serial_number=serial_number_to_delete, response_id=response_id)
 
-    db_responses = get_responses_from_excel()
-    waiting_responses, not_taken_responses, taken_responses = arrange_responses_by_status(responses=db_responses)
+    # Get the value of 'action' from query parameters
+    action = request.args.get('action')
+
+    # Get metadata from html input
+    serial_number = request.form.get('serial_number')
+    response_id = request.form.get('response_id')
+
+    match action:
+        case "delete":
+            change_row_status(move_to_status=DELETED_TEXT, response_id=response_id)
+        case "move from waiting to not taken":
+            change_row_status(move_to_status=NOT_TAKEN_TEXT, response_id=response_id)
+        case "move from waiting to taken":
+            change_row_status(move_to_status=TAKEN_TEXT, response_id=response_id)
+        case "move from not taken to waiting":
+            change_row_status(move_to_status=WAITING_TEXT, response_id=response_id)
+        case "move from not taken to taken":
+            change_row_status(move_to_status=TAKEN_TEXT, response_id=response_id)
+        case "move from taken to not taken":
+            change_row_status(move_to_status=NOT_TAKEN_TEXT, response_id=response_id)
+        case "move from taken to waiting":
+            change_row_status(move_to_status=WAITING_TEXT, response_id=response_id)
+
 
     global get_responses
     get_responses = False

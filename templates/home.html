@@ -169,12 +169,20 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <button type="button" class="btn btn-warning btn-lg btn-block" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ולא נלקחו</button>
+                    <form method="post" action="{{ url_for('set_row_status', action='move from waiting to not taken') }}">
+                        <input type="hidden" class="serial-number-waiting" name="serial_number" value="" readonly>
+                        <input type="hidden" class="response-id-waiting" name="response_id" value="" readonly>
+                        <button type="submit" class="btn btn-warning btn-lg btn-block" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ולא נלקחו</button>
+                    </form>
                     </br>
-                    <button type="button" class="btn btn-success btn btn-block" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ונלקחו</button>
-                    <form method="post" action="/delete-row">
-                        <input type="hidden" id="serial_number-waiting" name="serial_number" value="" readonly>
-                        <input type="hidden" id="response_id-waiting" name="response_id" value="" readonly>
+                    <form method="post" action="{{ url_for('set_row_status', action='move from waiting to taken') }}">
+                        <input type="hidden" class="serial-number-waiting" name="serial_number" value="" readonly>
+                        <input type="hidden" class="response-id-waiting" name="response_id" value="" readonly>
+                        <button type="submit" class="btn btn-success btn btn-block" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ונלקחו</button>
+                    </form>
+                    <form method="post" action="{{ url_for('set_row_status', action='delete') }}">
+                        <input type="hidden" class="serial-number-waiting" name="serial_number" value="" readonly>
+                        <input type="hidden" class="response-id-waiting" name="response_id" value="" readonly>
                         <button type="submit" class="btn btn-danger btn btn-block delete-button">מחיקה</button>
                     </form>
                 </div>
@@ -195,12 +203,20 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <button type="button" class="btn btn-success btn-lg btn-block" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ונלקחו</button>
+                    <form method="post" action="{{ url_for('set_row_status', action='move from not taken to taken') }}">
+                        <input type="hidden" class="serial-number-not-taken" name="serial_number" value="" readonly>
+                        <input type="hidden" class="response-id-not-taken" name="response_id" value="" readonly>
+                        <button type="submit" class="btn btn-success btn-lg btn-block" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ונלקחו</button>
+                    </form>
                 </br>
-                    <button type="button" class="btn btn-secondary btn btn-block" data-serial-number="" data-responseid="">העברה למחשבים שלא נלקחו</button>
-                    <form method="post" action="/delete-row">
-                        <input type="hidden" id="serial_number-not-taken" name="serial_number" value="" readonly>
-                        <input type="hidden" id="response_id-not-taken" name="response_id" value="" readonly>
+                    <form method="post" action="{{ url_for('set_row_status', action='move from not taken to waiting') }}">
+                        <input type="hidden" class="serial-number-not-taken" name="serial_number" value="" readonly>
+                        <input type="hidden" class="response-id-not-taken" name="response_id" value="" readonly>
+                        <button type="submit" class="btn btn-secondary btn btn-block" data-serial-number="" data-responseid="">העברה למחשבים שלא טופלו</button>
+                    </form>
+                    <form method="post" action="{{ url_for('set_row_status', action='delete') }}">
+                        <input type="hidden" class="serial-number-not-taken" name="serial_number" value="" readonly>
+                        <input type="hidden" class="response-id-not-taken" name="response_id" value="" readonly>
                         <button type="submit" class="btn btn-danger btn btn-block delete-button">מחיקה</button>
                     </form>
                 </div>
@@ -221,14 +237,22 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="/delete-row">
-                        <input type="hidden" id="serial_number-taken" name="serial_number" value="" readonly>
-                        <input type="hidden" id="response_id-taken" name="response_id" value="" readonly>
+                    <form method="post" action="{{ url_for('set_row_status', action='delete') }}">
+                        <input type="hidden" id="serial-number-taken" name="serial_number" value="" readonly>
+                        <input type="hidden" id="response-id-taken" name="response_id" value="" readonly>
                         <button type="submit" class="btn btn-danger btn-lg btn-block delete-button">מחיקה</button>
                     </form>
                 </br>
-                    <button type="button" class="btn btn-warning btn btn-block" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ולא נלקחו</button>
-                    <button type="button" class="btn btn-secondary btn btn-block" data-serial-number="" data-responseid="">העברה למחשבים שלא טופלו</button>
+                    <form method="post" action="{{ url_for('set_row_status', action='move from taken to not taken') }}">
+                        <input type="hidden" id="serial-number-taken" name="serial_number" value="" readonly>
+                        <input type="hidden" id="response-id-taken" name="response_id" value="" readonly>
+                        <button type="submit" class="btn btn-warning btn btn-block" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ולא נלקחו</button>
+                    </form>
+                    <form method="post" action="{{ url_for('set_row_status', action='move from taken to waiting') }}">
+                        <input type="hidden" id="serial-number-taken" name="serial_number" value="" readonly>
+                        <input type="hidden" id="response-id-taken" name="response_id" value="" readonly>
+                        <button type="submit" class="btn btn-secondary btn btn-block" data-serial-number="" data-responseid="">העברה למחשבים שלא טופלו</button>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">סגירה</button>
