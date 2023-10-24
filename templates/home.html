@@ -238,19 +238,19 @@
                 </div>
                 <div class="modal-body">
                     <form method="post" action="{{ url_for('set_row_status', action='delete') }}">
-                        <input type="hidden" id="serial-number-taken" name="serial_number" value="" readonly>
-                        <input type="hidden" id="response-id-taken" name="response_id" value="" readonly>
+                        <input type="hidden" class="serial-number-taken" name="serial_number" value="" readonly>
+                        <input type="hidden" class="response-id-taken" name="response_id" value="" readonly>
                         <button type="submit" class="btn btn-danger btn-lg btn-block delete-button">מחיקה</button>
                     </form>
                 </br>
                     <form method="post" action="{{ url_for('set_row_status', action='move from taken to not taken') }}">
-                        <input type="hidden" id="serial-number-taken" name="serial_number" value="" readonly>
-                        <input type="hidden" id="response-id-taken" name="response_id" value="" readonly>
+                        <input type="hidden" class="serial-number-taken" name="serial_number" value="" readonly>
+                        <input type="hidden" class="response-id-taken" name="response_id" value="" readonly>
                         <button type="submit" class="btn btn-warning btn btn-block" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ולא נלקחו</button>
                     </form>
                     <form method="post" action="{{ url_for('set_row_status', action='move from taken to waiting') }}">
-                        <input type="hidden" id="serial-number-taken" name="serial_number" value="" readonly>
-                        <input type="hidden" id="response-id-taken" name="response_id" value="" readonly>
+                        <input type="hidden" class="serial-number-taken" name="serial_number" value="" readonly>
+                        <input type="hidden" class="response-id-taken" name="response_id" value="" readonly>
                         <button type="submit" class="btn btn-secondary btn btn-block" data-serial-number="" data-responseid="">העברה למחשבים שלא טופלו</button>
                     </form>
                 </div>
