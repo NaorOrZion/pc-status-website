@@ -58,8 +58,13 @@ def change_row_status(move_to_status: str, response_id: str):
     # Edit the cell value using the 'at' accessor to "נמחקו"
     df.at[row_index, 'סטטוס'] = move_to_status
 
-    # Save the updated DataFrame back to the Excel file
-    df.to_excel(EXCEL_FILE_PATH, index=False, engine='openpyxl')
+    try:
+        # Write the updated DataFrame back to the Excel file
+        df.to_excel(EXCEL_FILE_PATH, index=False, engine='openpyxl')
+
+    except PermissionError as pe:
+        print(f"Error: Please close the excel file located in - {EXCEL_FILE_PATH}")
+        return
 
 
 def arrange_responses_by_status(responses: List[Dict[str, str]]) -> Tuple[List[Dict[str, str]], List[Dict[str, str]], List[Dict[str, str]]]:
@@ -154,7 +159,10 @@ def save_responses_to_excel(parsed_reponses: List[Dict[str, str]]) -> None:
         # Check if the serial number is in the serial numbers column to prevent duplicates
         serial_number = response['Serial number (Computer name)'].upper()
         is_serial_in_serials = serial_number in df['מספר סריאלי'].values
-        if is_serial_in_serials:
+
+        # If the serial number of the computer is already in the excel
+        #  and the status's row of this serial number is not WAITING_TEXT
+        if is_serial_in_serials and response['סטטוס'] == WAITING_TEXT:
             continue
 
         # Create a new row as a dictionary with keys matching the column headers
