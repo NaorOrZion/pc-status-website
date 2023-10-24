@@ -1,17 +1,21 @@
 from typing import Union, List, Dict, Tuple
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from googleapiclient.discovery import build
 
 import pandas as pd
 import google.oauth2.service_account
 
+# Global
+get_responses = True
+
 # Consts
-SCOPES = ["https://www.googleapis.com/auth/forms.responses.readonly"]
+SCOPES = ["https://www.googleapis.com/auth/forms.responses.readonly", "https://www.googleapis.com/auth/forms.currentonly", ]
 CLIENT_SECRET_PATH = "resources/client_secret.json"
 EXCEL_FILE_PATH = "db/test.xlsx"
 WAITING_TEXT = "מחשבים שלא טופלו"
 NOT_TAKEN_TEXT = "מחשבים שטופלו ולא נלקחו"
 TAKEN_TEXT = "מחשבים שטופלו ונלקחו"
+DELETED_TEXT = "נמחקו"
 COLUMNS_BANK = ['Unit',
                 'Email',
                 'Designated action',
@@ -40,7 +44,7 @@ def change_row_status(status: str, row):
     pass
 
 
-def delete_excel_row(serial_number: str) -> None:
+def delete_excel_row(serial_number: str, response_id: str) -> None:
     '''
     This function deletes a row in the excel by a serial number of a computer.
 
@@ -54,11 +58,14 @@ def delete_excel_row(serial_number: str) -> None:
     column_to_check = 'מספר סריאלי'
     value_to_match = serial_number
 
-    # Filter the DataFrame to exclude the row with the specified value
-    df = df[df[column_to_check] != value_to_match]
+    # Identify the row index based on the specified column value
+    row_index = df.index[df['מזהה תשובה'] == response_id].tolist()[0]
+
+    # Edit the cell value using the 'at' accessor to "נמחקו"
+    df.at[row_index, 'סטטוס'] = DELETED_TEXT
 
     # Save the updated DataFrame back to the Excel file
-    df.to_excel('your_excel_file_updated.xlsx', index=False, engine='openpyxl')
+    df.to_excel(EXCEL_FILE_PATH, index=False, engine='openpyxl')
 
 
 def arrange_responses_by_status(responses: List[Dict[str, str]]) -> Tuple[List[Dict[str, str]], List[Dict[str, str]], List[Dict[str, str]]]:
@@ -102,13 +109,14 @@ def get_responses_from_excel() -> List[Dict[str, str]]:
         10. טלפון אזרחי
         11. הערות
         12. סטטוס
+        13. מזהה תשובה
 
     @params: None.
     Returns: responses_dicts -> a list of dictionaries which every dictionary represents a single response.
     '''
     df = pd.read_excel(EXCEL_FILE_PATH,engine='openpyxl',dtype=object,header=None)
     responses_list = df.values.tolist()
-    responses_list = responses_list[1:] if len(responses_list) > 0 else ['0','0','0','0','0','0','0','0','0','0','0']
+    responses_list = responses_list[1:] if len(responses_list) > 0 else ['0','0','0','0','0','0','0','0','0','0','0', '0']
     responses_dicts = []
 
     for response in responses_list:
@@ -125,7 +133,8 @@ def get_responses_from_excel() -> List[Dict[str, str]]:
             'מייל אזרחי': response[8],
             'טלפון אזרחי': response[9],
             'הערות': response[10],
-            'סטטוס': response[11]
+            'סטטוס': response[11],
+            'מזהה תשובה': response[12]
         }
 
         responses_dicts.append(response_dict)
@@ -167,7 +176,8 @@ def save_responses_to_excel(parsed_reponses: List[Dict[str, str]]) -> None:
             'מייל אזרחי': response['Email'],
             'טלפון אזרחי': response['Phone number'],
             'הערות': response['Notes'],
-            'סטטוס': WAITING_TEXT
+            'סטטוס': WAITING_TEXT,
+            'מזהה תשובה': response['מזהה תשובה']
         }
 
         # Convert the values in the new row to strings to ensure they are treated as text
@@ -202,6 +212,7 @@ def parse_json_response(json_responses: JsonType) -> List[Dict[str, str]]:
         9. Notes
         10. Phone number
         11. Full name
+        12. Response ID
     
     This is inconvenient because the form is not ordered in that way, but the json reponse is.
 
@@ -212,6 +223,7 @@ def parse_json_response(json_responses: JsonType) -> List[Dict[str, str]]:
 
     for response in json_responses:
         single_response = {}
+        response_id = response['responseId']
         answers = response["answers"]
         questions_ids = {f"Question {index + 1}": id for index, id in enumerate(answers)}
 
@@ -227,6 +239,9 @@ def parse_json_response(json_responses: JsonType) -> List[Dict[str, str]]:
             #   if the question id of the answer is in the questions_ids dict.
             if question_id in questions_ids.values():
                 single_response[COLUMNS_BANK[index]] = text_value
+
+        # Add response ID to every response
+        single_response['מזהה תשובה'] = response_id
 
         # Append single response to a list
         parsed_responses.append(single_response)
@@ -265,16 +280,24 @@ def get_json_response() -> JsonType:
 
 
 @app.route('/delete-row', methods=['POST'])
-def delete_row():
+def delete_row() -> redirect:
     '''
     This function is responsible to retrieve the post request of the delete button in the main page.
 
     @params: None.
-    Returns: json.
+    Returns: redirect object to main page.
     '''
     serial_number_to_delete = request.form.get('serial_number')
-    delete_excel_row(serial_number=serial_number_to_delete)
-    return jsonify({'message': 'Row deleted successfully'})
+    response_id = request.form.get('response_id')
+    delete_excel_row(serial_number=serial_number_to_delete, response_id=response_id)
+
+    db_responses = get_responses_from_excel()
+    waiting_responses, not_taken_responses, taken_responses = arrange_responses_by_status(responses=db_responses)
+
+    global get_responses
+    get_responses = False
+
+    return redirect("/")
 
 
 @app.route("/", methods=["GET"])
@@ -285,9 +308,14 @@ def home_page():
     @params: None.
     Returns: None.
     '''
-    json_responses = get_json_response()
-    parsed_responses = parse_json_response(json_responses=json_responses)
-    save_responses_to_excel(parsed_reponses=parsed_responses)
+    global get_responses
+    if get_responses is True:
+        json_responses = get_json_response()
+        parsed_responses = parse_json_response(json_responses=json_responses)
+        save_responses_to_excel(parsed_reponses=parsed_responses)
+
+    get_responses = True
+
     db_responses = get_responses_from_excel()
     waiting_responses, not_taken_responses, taken_responses = arrange_responses_by_status(responses=db_responses)
 

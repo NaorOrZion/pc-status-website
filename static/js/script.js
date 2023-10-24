@@ -1,5 +1,5 @@
 $(function(){
-    $('#alert-modal-waiting').modal({
+    $('.alert-modal').modal({
         keyboard: true,
         backdrop: "static",
         show:false,
@@ -7,71 +7,36 @@ $(function(){
     }).on('show.bs.modal', function(event){
         // get the id of the row
         var getIdFromRow = $(event.relatedTarget).data('id');
+        var getModalType = $(event.relatedTarget).data('modal');
         var getSerialNumber = $(event.relatedTarget).data('serialnum');
+        var getResponseId = $(event.relatedTarget).data('responseid');
 
-        // Set the data-serial-number attribute for each button
-        $(this).find('button[data-serial-number]').attr('data-serial-number', getSerialNumber);
+        var serialNumberId = "";
+        var responseId = "";
 
-        //make your ajax call populate items
-        $(this).find('#modal-title-waiting').html($('<b>מחשב שלא טופל מספר ' + getIdFromRow  + '</b>'))
-
-        // Handle the click event for the "מחיקה" button
-        $(this).on('click', '.delete-button', function() {
-            var serialNumberToDelete = $(this).data('serial-number');
-
-            // Send the serial number to your Python function using an AJAX request
-            $.ajax({
-                type: 'POST',
-                url: '/delete-row',  // Replace with the actual endpoint on your server
-                data: { serial_number: serialNumberToDelete },
-                success: function(response) {
-                    console.log('Row deleted successfully:', response);
-                },
-                error: function(error) {
-                    console.error('Error deleting row:', error);
-                }
-            });
-
-            // Close the modal or perform other actions if needed
-            $('#alert-modal-waiting').modal('hide');
-        });
-    });
-});
-
-$(function(){
-    $('#alert-modal-not-taken').modal({
-        keyboard: true,
-        backdrop: "static",
-        show:false,
+        if (getModalType == 'waiting') {
+            //make your ajax call populate items
+            $(this).find('#modal-title-waiting').html($('<b>מחשב שלא טופל מספר ' + getIdFromRow  + '</b>'));
+            serialNumberId = "serial_number-waiting";
+            responseId = "response_id-waiting";
+        } else if (getModalType == 'not-taken') {
+            //make your ajax call populate items
+            $(this).find('#modal-title-not-taken').html($('<b>מחשב שטופל ולא נלקח מספר ' + getIdFromRow  + '</b>'));
+            serialNumberId = "serial_number-not-taken";
+            responseId = "response_id-not-taken";
+        } else if (getModalType == 'taken') {
+            //make your ajax call populate items
+            $(this).find('#modal-title-taken').html($('<b>מחשב שטופל ונלקח מספר ' + getIdFromRow  + '</b>'));
+            serialNumberId = "serial_number-taken";
+            responseId = "response_id-taken";
+        }
         
-    }).on('show.bs.modal', function(event){
-        // get the id of the row
-        var getIdFromRow = $(event.relatedTarget).data('id');
-        var getSerialNumber = $(event.relatedTarget).data('serialnum');
+        // Get the input element by ID
+        var inputSerialNumber = document.getElementById(serialNumberId);
+        var inputResponseId = document.getElementById(responseId);
 
-        // Set the data-serial-number attribute for each button
-        $(this).find('button[data-serial-number]').attr('data-serial-number', getSerialNumber);
-
-        //make your ajax call populate items
-        $(this).find('#modal-title-not-taken').html($('<b>מחשב שטופל ולא נלקח מספר ' + getIdFromRow  + '</b>'))
-    });
-});
-
-$(function(){
-    $('#alert-modal-taken').modal({
-        keyboard: true,
-        backdrop: "static",
-        show:false,
-        
-    }).on('show.bs.modal', function(event){
-        // get the id of the row
-        var getIdFromRow = $(event.relatedTarget).data('id');
-        var getSerialNumber = $(event.relatedTarget).data('serialnum');
-
-        // Set the data-serial-number attribute for each button
-        $(this).find('button[data-serial-number]').attr('data-serial-number', getSerialNumber);
-
-        //make your ajax call populate items
-        $(this).find('#modal-title-taken').html($('<b>מחשב שטופל ונלקח מספר ' + getIdFromRow  + '</b>'))
+        // Set the value of the input element
+        inputSerialNumber.value = getSerialNumber;
+        inputResponseId.value = getResponseId;
     });
 });
