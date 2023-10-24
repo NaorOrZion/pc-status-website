@@ -156,6 +156,10 @@ def save_responses_to_excel(parsed_reponses: List[Dict[str, str]]) -> None:
     
 
     for response in parsed_reponses:
+        # Check if the serial number is in the serial numbers column to prevent duplicates
+        if response['Response ID'] in df['מזהה תשובה'].values:
+            continue
+
         # Create a new row as a dictionary with keys matching the column headers
         new_row = {
             'שם מלא': response['Full name'],
@@ -170,7 +174,7 @@ def save_responses_to_excel(parsed_reponses: List[Dict[str, str]]) -> None:
             'טלפון אזרחי': response['Phone number'],
             'הערות': response['Notes'],
             'סטטוס': WAITING_TEXT,
-            'מזהה תשובה': response['מזהה תשובה']
+            'מזהה תשובה': response['Response ID']
         }
 
         # Convert the values in the new row to strings to ensure they are treated as text
@@ -234,7 +238,7 @@ def parse_json_response(json_responses: JsonType) -> List[Dict[str, str]]:
                 single_response[COLUMNS_BANK[index]] = text_value
 
         # Add response ID to every response
-        single_response['מזהה תשובה'] = response_id
+        single_response['Response ID'] = response_id
 
         # Append single response to a list
         parsed_responses.append(single_response)
