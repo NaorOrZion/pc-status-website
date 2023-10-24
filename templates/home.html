@@ -172,18 +172,23 @@
                     <form method="post" action="{{ url_for('set_row_status', action='move from waiting to not taken') }}">
                         <input type="hidden" class="serial-number-waiting" name="serial_number" value="" readonly>
                         <input type="hidden" class="response-id-waiting" name="response_id" value="" readonly>
-                        <button type="submit" class="btn btn-warning btn-lg btn-block" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ולא נלקחו</button>
+                        <button type="submit" class="btn btn-warning btn-lg btn-block mb-4" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ולא נלקחו</button>
                     </form>
-                    </br>
+
                     <form method="post" action="{{ url_for('set_row_status', action='move from waiting to taken') }}">
                         <input type="hidden" class="serial-number-waiting" name="serial_number" value="" readonly>
                         <input type="hidden" class="response-id-waiting" name="response_id" value="" readonly>
-                        <button type="submit" class="btn btn-success btn btn-block" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ונלקחו</button>
+                        <button type="submit" class="btn btn-success btn btn-block mb-1" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ונלקחו</button>
                     </form>
+
                     <form method="post" action="{{ url_for('set_row_status', action='delete') }}">
                         <input type="hidden" class="serial-number-waiting" name="serial_number" value="" readonly>
                         <input type="hidden" class="response-id-waiting" name="response_id" value="" readonly>
-                        <button type="submit" class="btn btn-danger btn btn-block delete-button">מחיקה</button>
+                        <button type="submit" class="btn btn-danger btn btn-block delete-button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                          </svg>
+                        </button>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -206,18 +211,23 @@
                     <form method="post" action="{{ url_for('set_row_status', action='move from not taken to taken') }}">
                         <input type="hidden" class="serial-number-not-taken" name="serial_number" value="" readonly>
                         <input type="hidden" class="response-id-not-taken" name="response_id" value="" readonly>
-                        <button type="submit" class="btn btn-success btn-lg btn-block" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ונלקחו</button>
+                        <button type="submit" class="btn btn-success btn-lg btn-block mb-4" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ונלקחו</button>
                     </form>
-                </br>
+
                     <form method="post" action="{{ url_for('set_row_status', action='move from not taken to waiting') }}">
                         <input type="hidden" class="serial-number-not-taken" name="serial_number" value="" readonly>
                         <input type="hidden" class="response-id-not-taken" name="response_id" value="" readonly>
-                        <button type="submit" class="btn btn-secondary btn btn-block" data-serial-number="" data-responseid="">העברה למחשבים שלא טופלו</button>
+                        <button type="submit" class="btn btn-secondary btn btn-block mb-1" data-serial-number="" data-responseid="">העברה למחשבים שלא טופלו</button>
                     </form>
+
                     <form method="post" action="{{ url_for('set_row_status', action='delete') }}">
                         <input type="hidden" class="serial-number-not-taken" name="serial_number" value="" readonly>
                         <input type="hidden" class="response-id-not-taken" name="response_id" value="" readonly>
-                        <button type="submit" class="btn btn-danger btn btn-block delete-button">מחיקה</button>
+                        <button type="submit" class="btn btn-danger btn btn-block delete-button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                          </svg>
+                        </button>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -240,14 +250,19 @@
                     <form method="post" action="{{ url_for('set_row_status', action='delete') }}">
                         <input type="hidden" class="serial-number-taken" name="serial_number" value="" readonly>
                         <input type="hidden" class="response-id-taken" name="response_id" value="" readonly>
-                        <button type="submit" class="btn btn-danger btn-lg btn-block delete-button">מחיקה</button>
+                        <button type="submit" class="btn btn-danger btn-lg btn-block delete-button  mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                          </svg>
+                        </button>
                     </form>
-                </br>
+
                     <form method="post" action="{{ url_for('set_row_status', action='move from taken to not taken') }}">
                         <input type="hidden" class="serial-number-taken" name="serial_number" value="" readonly>
                         <input type="hidden" class="response-id-taken" name="response_id" value="" readonly>
-                        <button type="submit" class="btn btn-warning btn btn-block" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ולא נלקחו</button>
+                        <button type="submit" class="btn btn-warning btn btn-block mb-1" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ולא נלקחו</button>
                     </form>
+
                     <form method="post" action="{{ url_for('set_row_status', action='move from taken to waiting') }}">
                         <input type="hidden" class="serial-number-taken" name="serial_number" value="" readonly>
                         <input type="hidden" class="response-id-taken" name="response_id" value="" readonly>
