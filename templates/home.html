@@ -58,7 +58,7 @@
                     </thead>
                     <tbody>
                         {% for response in waiting_responses %}
-                        <tr data-toggle="modal" data-id="{{ loop.index }}" data-serialNum="{{ response['מספר סריאלי'] }}" data-responseid="{{ response['מזהה תשובה'] }}" data-target="#alert-modal-waiting" data-modal="waiting">
+                        <tr data-toggle="modal" data-id="{{ loop.index }}" data-serialNum="{{ response['מספר סריאלי'] }}" data-responseid="{{ response['מזהה תשובה'] }}" data-target="#alert-modal-waiting" data-email="{{ response['מייל אזרחי'] }}" data-modal="waiting">
                             <th scope="row">{{ loop.index }}</th>
                             <td>{{ response['שם מלא'] }}</th>
                             <td>{{ response['תאריך כניסת מחשב'] }}</th>
@@ -99,7 +99,7 @@
                     <tbody>
                         <tbody>
                             {% for response in not_taken_responses %}
-                            <tr data-toggle="modal" data-id="{{ loop.index }}" data-serialNum="{{ response['מספר סריאלי'] }}" data-responseid="{{ response['מזהה תשובה'] }}" data-target="#alert-modal-not-taken" data-modal="not-taken">
+                            <tr data-toggle="modal" data-id="{{ loop.index }}" data-serialNum="{{ response['מספר סריאלי'] }}" data-responseid="{{ response['מזהה תשובה'] }}" data-target="#alert-modal-not-taken" data-email="{{ response['מייל אזרחי'] }}" data-modal="not-taken">
                                 <th scope="row">{{ loop.index }}</th>
                                 <td>{{ response['שם מלא'] }}</th>
                                 <td>{{ response['תאריך כניסת מחשב'] }}</th>
@@ -140,7 +140,7 @@
                     </thead>
                     <tbody>
                         {% for response in taken_responses %}
-                        <tr data-toggle="modal" data-id="{{ loop.index }}" data-serialNum="{{ response['מספר סריאלי'] }}" data-responseid="{{ response['מזהה תשובה'] }}" data-target="#alert-modal-taken" data-modal="taken">
+                        <tr data-toggle="modal" data-id="{{ loop.index }}" data-serialNum="{{ response['מספר סריאלי'] }}" data-responseid="{{ response['מזהה תשובה'] }}" data-target="#alert-modal-taken" data-email="{{ response['מייל אזרחי'] }}" data-modal="taken">
                             <th scope="row">{{ loop.index }}</th>
                             <td>{{ response['שם מלא'] }}</th>
                             <td>{{ response['תאריך כניסת מחשב'] }}</th>
@@ -173,6 +173,7 @@
                 <div class="modal-body">
                     <form method="post" action="{{ url_for('set_row_status', action='move from waiting to not taken') }}">
                         <input type="hidden" class="serial-number-waiting" name="serial_number" value="" readonly>
+                        <input type="hidden" class="response-id-waiting" name="response_id" value="" readonly>
                         <input type="hidden" class="response-id-waiting" name="response_id" value="" readonly>
                         <button type="submit" class="btn btn-warning btn-lg btn-block mb-4" data-serial-number="" data-responseid="">העברה למחשבים שטופלו ולא נלקחו</button>
                     </form>

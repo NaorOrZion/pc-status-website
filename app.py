@@ -1,7 +1,10 @@
 from typing import Union, List, Dict, Tuple
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from googleapiclient.discovery import build
+from email.message import EmailMessage
 
+import ssl
+import smtplib
 import pandas as pd
 import google.oauth2.service_account
 
@@ -12,6 +15,14 @@ get_responses = True
 SCOPES = ["https://www.googleapis.com/auth/forms.responses.readonly", "https://www.googleapis.com/auth/forms.currentonly", ]
 CLIENT_SECRET_PATH = "resources/client_secret.json"
 EXCEL_FILE_PATH = "db/test.xlsx"
+
+## Email consts
+EMAIL_SENDER = "naororzion101@gmail.com"
+EMAIL_PASSWORD = "inbx ufab rjfq xxnh"
+EMAIL_SUBJECT = "מתקן לוטם סיימו לתקן את המחשב שלך!"
+EMAILֹ_BODY = "צוות מתקן לוטם תיקנו את המחשב שלך!\nאפשר להגיע לקחת אותו מהצוות.\nבברכה, צוות מתקן לוטם."
+
+## Text consts
 WAITING_TEXT = "מחשבים שלא טופלו"
 NOT_TAKEN_TEXT = "מחשבים שטופלו ולא נלקחו"
 TAKEN_TEXT = "מחשבים שטופלו ונלקחו"
@@ -38,6 +49,26 @@ JsonType = List[Dict[Union[str, Dict[str, Dict[str, Union[str, Dict[str, List[Di
 # App Initializer
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "pc-status"
+
+
+def send_email(email_reciver: str) -> None:
+    '''
+    This function gets an email string as a parameter and send an email
+    from EMAIL_SENDER to the reciver about his computer status.
+
+    @params: email_reciver -> a string representing the email to send to.
+    Returns: None.
+    '''
+    email = EmailMessage()
+    email['From'] = EMAIL_SENDER
+    email['To'] = email_reciver
+    email['Subject'] = EMAIL_SUBJECT
+    email.set_content(EMAILֹ_BODY)
+    
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        smtp.login(EMAIL_SENDER, EMAIL_PASSWORD)
+        smtp.sendmail(EMAIL_SENDER, email_reciver, email.as_string())
 
 
 def change_row_status(move_to_status: str, response_id: str):
@@ -277,12 +308,12 @@ def get_json_response() -> JsonType:
 
 
 @app.route('/set-row-status', methods=['POST'])
-def set_row_status() -> redirect:
+def set_row_status() -> None:
     '''
     This function is responsible to retrieve the post request of the delete button in the main page.
 
     @params: None.
-    Returns: redirect object to main page.
+    Returns: None.
     '''
 
     # Get the value of 'action' from query parameters
@@ -305,6 +336,7 @@ def set_row_status() -> redirect:
             change_row_status(move_to_status=TAKEN_TEXT, response_id=response_id)
         case "move from taken to not taken":
             change_row_status(move_to_status=NOT_TAKEN_TEXT, response_id=response_id)
+            send_email()
         case "move from taken to waiting":
             change_row_status(move_to_status=WAITING_TEXT, response_id=response_id)
 
