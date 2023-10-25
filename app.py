@@ -322,12 +322,14 @@ def set_row_status() -> None:
     # Get metadata from html input
     serial_number = request.form.get('serial_number')
     response_id = request.form.get('response_id')
+    email = request.form.get('email')
 
     match action:
         case "delete":
             change_row_status(move_to_status=DELETED_TEXT, response_id=response_id)
         case "move from waiting to not taken":
             change_row_status(move_to_status=NOT_TAKEN_TEXT, response_id=response_id)
+            #send_email(email_reciver=email)
         case "move from waiting to taken":
             change_row_status(move_to_status=TAKEN_TEXT, response_id=response_id)
         case "move from not taken to waiting":
@@ -336,7 +338,6 @@ def set_row_status() -> None:
             change_row_status(move_to_status=TAKEN_TEXT, response_id=response_id)
         case "move from taken to not taken":
             change_row_status(move_to_status=NOT_TAKEN_TEXT, response_id=response_id)
-            send_email()
         case "move from taken to waiting":
             change_row_status(move_to_status=WAITING_TEXT, response_id=response_id)
 
