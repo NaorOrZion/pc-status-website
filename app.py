@@ -1,10 +1,14 @@
-from typing import Union, List, Dict, Tuple
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from typing import Union, List, Dict, Tuple
 from googleapiclient.discovery import build
-from email.message import EmailMessage
+from email.mime.text import MIMEText
+from requests import HTTPError
 
-import ssl
-import smtplib
+import os
+import base64
 import pandas as pd
 import google.oauth2.service_account
 
@@ -13,12 +17,13 @@ get_responses = True
 
 # Consts
 SCOPES = ["https://www.googleapis.com/auth/forms.responses.readonly", "https://www.googleapis.com/auth/forms.currentonly", ]
+GMAIL_SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 CLIENT_SECRET_PATH = "resources/client_secret.json"
+CREDENTIALS_PATH = "resources/credentials.json"
+TOKEN_PATH = 'resources/token.json'
 EXCEL_FILE_PATH = "db/test.xlsx"
 
 ## Email consts
-EMAIL_SENDER = "naororzion101@gmail.com"
-EMAIL_PASSWORD = "inbx ufab rjfq xxnh"
 EMAIL_SUBJECT = "מתקן לוטם סיימו לתקן את המחשב שלך!"
 EMAILֹ_BODY = "צוות מתקן לוטם תיקנו את המחשב שלך!\nאפשר להגיע לקחת אותו מהצוות.\nבברכה, צוות מתקן לוטם."
 
@@ -59,16 +64,36 @@ def send_email(email_reciver: str) -> None:
     @params: email_reciver -> a string representing the email to send to.
     Returns: None.
     '''
-    email = EmailMessage()
-    email['From'] = EMAIL_SENDER
-    email['To'] = email_reciver
-    email['Subject'] = EMAIL_SUBJECT
-    email.set_content(EMAILֹ_BODY)
+    creds = None
+
+    if not os.path.isfile(CREDENTIALS_PATH):
+        return
     
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-        smtp.login(EMAIL_SENDER, EMAIL_PASSWORD)
-        smtp.sendmail(EMAIL_SENDER, email_reciver, email.as_string())
+    # Checks if the creds file is exists in the same directory.
+    if os.path.exists(CREDENTIALS_PATH):
+        creds = Credentials.from_authorized_user_file(str(TOKEN_PATH), GMAIL_SCOPES)
+        
+    # If the creds file is expired then refresh it - Request again    
+    if creds and creds.expired and creds.refresh_token:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, GMAIL_SCOPES)
+            creds = flow.run_local_server(port=0)
+
+        TOKEN_PATH.write_text(creds.to_json())
+
+    service = build('gmail', 'v1', credentials=creds)
+    message = MIMEText(EMAILֹ_BODY)
+    message['to'] = email_reciver
+    message['subject'] = EMAIL_SUBJECT
+    create_message = {'raw': base64.urlsafe_b64encode(message.as_bytes()).decode()}
+
+    try:
+        message = service.users().messages().send(userId="me", body=create_message).execute()
+    except HTTPError as error:
+        print(F'An error occurred: {error}')
+        message = None
 
 
 def change_row_status(move_to_status: str, response_id: str):
@@ -329,7 +354,7 @@ def set_row_status() -> None:
             change_row_status(move_to_status=DELETED_TEXT, response_id=response_id)
         case "move from waiting to not taken":
             change_row_status(move_to_status=NOT_TAKEN_TEXT, response_id=response_id)
-            #send_email(email_reciver=email)
+            send_email(email_reciver=email)
         case "move from waiting to taken":
             change_row_status(move_to_status=TAKEN_TEXT, response_id=response_id)
         case "move from not taken to waiting":
