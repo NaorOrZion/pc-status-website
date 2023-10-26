@@ -81,7 +81,9 @@ def send_email(email_reciver: str) -> None:
             flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, GMAIL_SCOPES)
             creds = flow.run_local_server(port=0)
 
-        TOKEN_PATH.write_text(creds.to_json())
+        # Save the credentials for the next run
+        with open(TOKEN_PATH, 'w') as token:
+            token.write(creds.to_json())
 
     service = build('gmail', 'v1', credentials=creds)
     message = MIMEText(EMAILֹ_BODY)
