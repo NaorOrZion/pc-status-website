@@ -54,22 +54,17 @@ Open google with the google account you synced your contacts with, than:
 
 #### How a form's response looks like
 
-1. שם מלא
-2. תאריך כניסת המחשב
-3. הפעולה הנדרשת
-1. שם מלא
-        2. תאריך כניסת מחשב
-        3. הפעולה הנדרשת
-        4. פרמוט לרשת
-        5. מספר סריאלי
-        6. סגמנט במשרד
-        7. יחידה
-        8. מספר אישי/ת.ז
-        9. מייל אזרחי
-        10. טלפון אזרחי
-        11. הערות
-        12. סטטוס
-        13. מזהה תשובה
+1. Full name
+2. Request date
+3. Designated action
+4. Network format
+5. Serial number
+6. Office segment
+7. Unit
+8. Your ID
+9. Email
+10. Phone number
+11. Other details
 
 ### Installation
 
