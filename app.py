@@ -24,8 +24,8 @@ TOKEN_PATH = 'resources/token.json'
 EXCEL_FILE_PATH = "db/test.xlsx"
 
 ## Email consts
-EMAIL_SUBJECT = "מתקן לוטם סיימו לתקן את המחשב שלך!"
-EMAILֹ_BODY = "צוות מתקן לוטם תיקנו את המחשב שלך!\nאפשר להגיע לקחת אותו מהצוות.\nבברכה, צוות מתקן לוטם."
+EMAIL_SUBJECT = "סיימנו לתקן את המחשב שלך!"
+EMAILֹ_BODY = "המחשב שלך תוקן ואפשר להגיע לקחת אותו!"
 
 ## Text consts
 WAITING_TEXT = "מחשבים שלא טופלו"
@@ -46,7 +46,7 @@ COLUMNS_BANK = ['Unit',
 
 # The form ID can be found in the edit mode of any form that was 
 # created by the user which made the Google Cloud Console project.
-FORM_ID = "1spTaWVM6t2BPGFGhmrfFszV2HZdgjzrSHzbPROny0wg"
+FORM_ID = ""
 
 # Unique Typing Types
 JsonType = List[Dict[Union[str, Dict[str, Dict[str, Union[str, Dict[str, List[Dict[str, str]]]]]]], str]]
