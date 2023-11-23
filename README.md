@@ -52,6 +52,22 @@ Open google with the google account you synced your contacts with, than:
 10. Change it's name to "credentials.json".
 11. Place this file in your github project in the folder "resources".
 
+#### How a form's response looks like
+
+1. שם מלא
+        2. תאריך כניסת מחשב
+        3. הפעולה הנדרשת
+        4. פרמוט לרשת
+        5. מספר סריאלי
+        6. סגמנט במשרד
+        7. יחידה
+        8. מספר אישי/ת.ז
+        9. מייל אזרחי
+        10. טלפון אזרחי
+        11. הערות
+        12. סטטוס
+        13. מזהה תשובה
+
 ### Installation
 
 1. Clone the github project to a designated folder in your desktop.
