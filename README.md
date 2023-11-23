@@ -55,6 +55,9 @@ Open google with the google account you synced your contacts with, than:
 #### How a form's response looks like
 
 1. שם מלא
+2. תאריך כניסת המחשב
+3. הפעולה הנדרשת
+1. שם מלא
         2. תאריך כניסת מחשב
         3. הפעולה הנדרשת
         4. פרמוט לרשת
